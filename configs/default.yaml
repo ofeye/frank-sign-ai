@@ -1,0 +1,172 @@
+project:
+  name: "FrankSign-AI"
+  version: "0.1.0"
+  description: "AI-based Frank Sign analysis for cardiovascular risk prediction"
+
+# ============================================================
+# DATA CONFIGURATION
+# ============================================================
+data:
+  # Paths (relative to project root)
+  annotations_path: "data/annotations/annotations.xml"
+  clinical_data_path: "FS - AI - Sayfa1.csv"
+  images_dir: "data/raw"
+  processed_dir: "data/processed"
+  splits_dir: "data/splits"
+  
+  # Image preprocessing
+  image_size: [256, 256]
+  normalize_mean: [0.485, 0.456, 0.406]  # ImageNet
+  normalize_std: [0.229, 0.224, 0.225]
+  
+  # Data split ratios
+  train_ratio: 0.70
+  val_ratio: 0.15
+  test_ratio: 0.15
+  
+  # Stratification
+  stratify_by: "has_frank_sign"  # Ensure balanced splits
+  
+  # Augmentation
+  augmentation:
+    enabled: true
+    horizontal_flip: false  # Don't flip - left/right ears are different
+    rotation_range: 15  # degrees
+    scale_range: [0.9, 1.1]
+    brightness_range: [0.8, 1.2]
+    contrast_range: [0.8, 1.2]
+    elastic_transform: false  # Enable later if needed
+
+# ============================================================
+# MODEL CONFIGURATION  
+# ============================================================
+model:
+  # Architecture selection
+  architecture: "attention_unet"  # Options: unet, attention_unet, unet_plusplus
+  
+  # Encoder backbone
+  encoder: "resnet34"  # Options: resnet18, resnet34, resnet50, efficientnet-b0
+  pretrained: true
+  encoder_weights: "imagenet"
+  
+  # Decoder settings
+  decoder_channels: [256, 128, 64, 32, 16]
+  
+  # Output
+  num_classes: 3  # Background, Frank Sign line, Frank Sign region
+  
+  # Attention (for attention_unet)
+  attention:
+    type: "additive"  # Options: additive, multiplicative
+    
+# ============================================================
+# TRAINING CONFIGURATION
+# ============================================================
+training:
+  # Basic settings
+  batch_size: 8
+  epochs: 100
+  num_workers: 4
+  
+  # Optimizer
+  optimizer: "adamw"
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  
+  # Scheduler
+  scheduler: "cosine"  # Options: cosine, step, plateau
+  warmup_epochs: 5
+  
+  # Loss function
+  loss: "dice_ce"  # Options: dice, ce, dice_ce, focal
+  loss_weights:
+    dice: 0.5
+    ce: 0.5
+  
+  # Class weights (for imbalanced data)
+  class_weights: [0.1, 0.45, 0.45]  # Background, line, region
+  
+  # Early stopping
+  early_stopping:
+    enabled: true
+    patience: 15
+    monitor: "val_dice"
+    mode: "max"
+  
+  # Checkpointing
+  checkpoint:
+    save_best: true
+    save_last: true
+    monitor: "val_dice"
+
+# ============================================================
+# EVALUATION CONFIGURATION
+# ============================================================
+evaluation:
+  # Metrics to compute
+  metrics:
+    - "dice"
+    - "iou"
+    - "hausdorff_95"
+    - "precision"
+    - "recall"
+  
+  # Thresholds for binary prediction
+  threshold: 0.5
+  
+  # XAI settings
+  xai:
+    enabled: true
+    methods: ["gradcam"]  # Options: gradcam, gradcam_plusplus, shap
+    save_visualizations: true
+
+# ============================================================
+# EXPERIMENT TRACKING
+# ============================================================
+experiment:
+  # Tracking backend
+  tracker: "local"  # Options: local, mlflow, wandb
+  
+  # Experiment naming
+  name: "baseline"
+  tags: ["attention_unet", "pilot_data"]
+  
+  # Output directories
+  output_dir: "experiments"
+  
+  # Logging
+  log_every_n_steps: 10
+  
+  # Reproducibility
+  seed: 42
+  deterministic: true
+
+# ============================================================
+# HARDWARE
+# ============================================================
+hardware:
+  device: "auto"  # Options: auto, cpu, cuda, mps
+  precision: 32  # Options: 16, 32, bf16
+  
+# ============================================================
+# GEOMETRIC FEATURE EXTRACTION
+# ============================================================
+features:
+  # Ruler calibration
+  ruler:
+    enabled: true
+    segment_length_mm: 10  # Known ruler segment length
+    
+  # Features to extract
+  extract:
+    - "length_mm"
+    - "curvature_mean"
+    - "curvature_max"
+    - "tortuosity"
+    - "relative_length"
+    - "localization_x"
+    - "localization_y"
+    
+  # Normalization reference
+  normalization:
+    method: "ear_height"  # Options: ear_height, ear_area, ruler

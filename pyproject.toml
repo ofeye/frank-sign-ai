@@ -1,0 +1,115 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "franksign"
+version = "0.1.0"
+description = "AI-based Frank Sign analysis for cardiovascular risk prediction"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "Frank Sign Research Team", email = "research@example.com"}
+]
+keywords = ["medical-imaging", "deep-learning", "cardiovascular", "frank-sign", "segmentation"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    # Core
+    "numpy>=1.24.0",
+    "pandas>=2.0.0",
+    
+    # Deep Learning
+    "torch>=2.0.0",
+    "torchvision>=0.15.0",
+    "segmentation-models-pytorch>=0.3.3",
+    
+    # Image Processing
+    "opencv-python>=4.8.0",
+    "scikit-image>=0.21.0",
+    "Pillow>=10.0.0",
+    "albumentations>=1.3.1",
+    
+    # XML Parsing
+    "lxml>=4.9.0",
+    
+    # Configuration
+    "pyyaml>=6.0",
+    "pydantic>=2.0.0",
+    
+    # Visualization
+    "matplotlib>=3.7.0",
+    "seaborn>=0.12.0",
+    
+    # Utilities
+    "tqdm>=4.65.0",
+    "rich>=13.0.0",
+    
+    # XAI
+    "shap>=0.42.0",
+    "captum>=0.6.0",  # For Grad-CAM
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "black>=23.7.0",
+    "isort>=5.12.0",
+    "mypy>=1.5.0",
+    "ruff>=0.0.285",
+]
+experiment = [
+    "mlflow>=2.5.0",
+    "wandb>=0.15.0",
+]
+notebooks = [
+    "jupyter>=1.0.0",
+    "ipywidgets>=8.1.0",
+]
+
+[project.scripts]
+franksign-parse = "franksign.cli.parse:main"
+franksign-train = "franksign.cli.train:main"
+franksign-eval = "franksign.cli.evaluate:main"
+
+[project.urls]
+Repository = "https://github.com/PLACEHOLDER/franksign-ai"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+line-length = 88
+target-version = ["py310"]
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+select = ["E", "F", "W", "I", "N", "D", "UP"]
+ignore = ["D100", "D104"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_ignores = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --cov=franksign --cov-report=term-missing"
