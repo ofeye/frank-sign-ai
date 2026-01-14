@@ -1,7 +1,7 @@
 # Process: Data Pipeline Development
 
 ## Status: 🟢 Active
-## Last Updated: 2026-01-13
+## Last Updated: 2026-01-14
 ## Owner: AI Agent + Human
 
 ---
@@ -18,6 +18,20 @@
 ---
 
 ## Progress Log
+
+### 2026-01-14
+**Completed:**
+- Added CLI skeleton (`franksign-parse`, train/eval placeholders) aligned with pyproject entrypoints
+- Scaffolded torch `FrankSignDataset` and lightweight preprocess helper
+- Added Pandera-based `scripts/validate_data.py` for clinical CSV checks
+
+**Blockers:**
+- Full preprocessing (ruler detection) and Dataset transforms pending
+
+**Next Steps:**
+- Integrate production-ready preprocessing/augmentation
+- Add Dataset-based DataLoader and training loop
+- Expand validation schema for new clinical columns
 
 ### 2026-01-13
 **Completed:**

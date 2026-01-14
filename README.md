@@ -15,15 +15,23 @@ This project develops an AI system to analyze **Frank's Sign** (diagonal earlobe
 
 ```bash
 # Clone and setup
-cd /Applications/Codes/84.\ AI_FrankSign
+cd /Applications/Codes/84. AI_FrankSign
 pip install -e .
 
-# Parse CVAT annotations
-python scripts/parse_annotations.py --input data/annotations/annotations.xml
+# Parse CVAT annotations (package entrypoint)
+franksign-parse --input data/annotations/annotations.xml
 
-# Train model (when ready)
-python scripts/train.py --config configs/default.yaml
+# Validate clinical CSV (sample or production)
+python scripts/validate_data.py --clinical "FS - AI - Sayfa1.csv"
+# Optional: include CVAT structural checks
+python scripts/validate_data.py --clinical "FS - AI - Sayfa1.csv" \
+  --annotations data/annotations/annotations.xml
+
+# Train/Evaluate (placeholders for now)
+franksign-train --config configs/default.yaml
+franksign-eval --config configs/default.yaml
 ```
+
 
 ## 📁 Project Structure
 
@@ -48,7 +56,7 @@ python scripts/train.py --config configs/default.yaml
 |-------|--------|----------|
 | Data Collection | 🟡 In Progress | Month 1-12 |
 | Annotation (CVAT) | 🟡 Pilot (121 images) | Month 1-12 |
-| Feature Extraction | ⚪ Planned | Month 6-15 |
+| Feature Extraction | 🟢 Basic skeleton ready | Month 6-15 |
 | Model Development | ⚪ Planned | Month 9-16 |
 | Clinical Validation | ⚪ Planned | Month 14-18 |
 

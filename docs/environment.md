@@ -30,6 +30,9 @@ deactivate
 | lxml | 6.0.2 | CVAT XML annotation parsing |
 | pyyaml | 6.0.3 | Configuration file parsing |
 | pytest | 9.0.2 | Unit testing |
+| pandera | _planned_ | DataFrame schema validation (not yet installed in venv) |
+
+> Forward-looking dependencies (torch, torchvision, segmentation-models-pytorch, etc.) remain specified in `pyproject.toml` but are not installed in the current lightweight venv.
 
 ### Installation Log
 

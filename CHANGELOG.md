@@ -29,9 +29,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Pre-commit hooks** (`.pre-commit-config.yaml`) - Black, Ruff, isort (2026-01-13)
 - **Lead Developer Audit Report** (`docs/audit_report_draft.md`) (2026-01-13)
 - **Documentation Sync Protocol** in AGENTS.md - MUST rules for doc updates (2026-01-13)
+- **CLI skeleton** (`src/franksign/cli/`) with parse/train/eval entrypoints (2026-01-14)
+- **Dataset/preprocess scaffolds** (`src/franksign/data/dataset.py`, `preprocess.py`) (2026-01-14)
+- **Validation utilities** (`src/franksign/data/validation.py`) incl. Pandera schema and CVAT checks (2026-01-14)
+- **Clinical validation script** (`scripts/validate_data.py`) using Pandera (2026-01-14)
+- **task.md** tracker (2026-01-14)
 
 ### Changed
 - ROADMAP.md Phase 3: Added MAEF-Net and Mamba-UNet to model experimental design (2026-01-13)
+- README quick start now points to package entrypoints and validation script (2026-01-14)
+- Data pipeline process log updated with dataset/validation scaffolds (2026-01-14)
+- pyproject.toml dependencies include Pandera for schema validation (2026-01-14)
+- `validate_data.py` can also check CVAT annotations structurally (2026-01-14)
 
 ### Fixed
 - CVAT parser: _parse_point now handles semicolon-separated multi-point coordinates
