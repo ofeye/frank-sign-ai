@@ -31,8 +31,9 @@ deactivate
 | pyyaml | 6.0.3 | Configuration file parsing |
 | pytest | 9.0.2 | Unit testing |
 | pandera | _planned_ | DataFrame schema validation (not yet installed in venv) |
+| scikit-learn | _planned_ | Tabular baseline modeling (not yet installed in venv) |
 
-> Forward-looking dependencies (torch, torchvision, segmentation-models-pytorch, etc.) remain specified in `pyproject.toml` but are not installed in the current lightweight venv.
+> Forward-looking dependencies (torch, torchvision, segmentation-models-pytorch, scikit-learn, etc.) remain specified in `pyproject.toml` but are not installed in the current lightweight venv.
 
 ### Installation Log
 

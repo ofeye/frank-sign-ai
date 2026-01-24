@@ -28,6 +28,15 @@ from franksign.data.validation import ClinicalSchema, validate_cvat_project  # n
 from franksign.data.cvat_parser import load_annotations  # noqa: E402
 
 
+def _save_table(df: pd.DataFrame, path: Path, default_name: str) -> None:
+    target = path if path.suffix else path / default_name
+    target.parent.mkdir(parents=True, exist_ok=True)
+    if target.suffix.lower() == ".csv":
+        df.to_csv(target, index=False)
+    else:
+        df.to_parquet(target, index=False)
+
+
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Validate clinical CSV and annotations")
     parser.add_argument(
@@ -49,7 +58,14 @@ def _build_parser() -> argparse.ArgumentParser:
         "-s",
         type=str,
         default=None,
-        help="Optional path to save validation summary as CSV.",
+        help="Optional path to save validated clinical data (CSV/Parquet).",
+    )
+    parser.add_argument(
+        "--report",
+        "-r",
+        type=str,
+        default=None,
+        help="Optional path to save validation issues (CSV/Parquet).",
     )
     return parser
 
@@ -73,16 +89,16 @@ def main(argv: Optional[list[str]] = None) -> int:
     except pa.errors.SchemaErrors as exc:
         print("❌ Clinical validation failed. Top issues:")
         print(exc.failure_cases.head())
-        if args.summary:
-            Path(args.summary).parent.mkdir(parents=True, exist_ok=True)
-            exc.failure_cases.to_csv(args.summary, index=False)
-            print(f"📝 Failure cases saved to {args.summary}")
+        if args.report:
+            Path(args.report).parent.mkdir(parents=True, exist_ok=True)
+            _save_table(exc.failure_cases, Path(args.report), default_name="clinical_issues.parquet")
+            print(f"📝 Failure cases saved to {args.report}")
         return 2
 
     print("✅ Clinical validation passed against ClinicalSchema")
     if args.summary:
         Path(args.summary).parent.mkdir(parents=True, exist_ok=True)
-        validated.to_csv(args.summary, index=False)
+        _save_table(validated, Path(args.summary), default_name="clinical_validated.parquet")
         print(f"📝 Cleaned data saved to {args.summary}")
 
     # Optional CVAT validation
@@ -97,6 +113,10 @@ def main(argv: Optional[list[str]] = None) -> int:
             print("⚠️  CVAT validation reported:")
             for issue in issues:
                 print(f" - [{issue.level}] {issue.message}")
+            if args.report:
+                issues_path = Path(args.report)
+                issues_df = pd.DataFrame([issue.__dict__ for issue in issues])
+                _save_table(issues_df, issues_path, default_name="cvat_issues.parquet")
         else:
             print("✅ CVAT validation passed basic structural checks")
 

@@ -1,14 +1,15 @@
 # Process: Model Development
 
-## Status: ⚪ Planned
-## Last Updated: 2026-01-13
-## Owner: TBD
+## Status: 🟡 In Progress
+## Last Updated: 2026-01-14
+## Owner: TBD (Tabular baseline started)
 
 ---
 
 ## Current Objectives
 
 - [ ] Baseline models (classical CV)
+- [x] Tabular baseline (geometric + clinical)
 - [ ] U-Net implementation
 - [ ] Attention U-Net implementation
 - [ ] XAI integration (Grad-CAM, SHAP)
@@ -17,6 +18,19 @@
 ---
 
 ## Progress Log
+
+### 2026-01-14
+**Status:** Tabular baseline planned/started (awaiting full pipeline stats)
+
+**Progress:**
+- Demo-only pipeline run: feature_join (match_rate ≈ 0.73), tabular regression on demo `syntax_score` → MAE ~8.33, RMSE ~9.70, R² ≈ -0.08 (synthetic; for plumbing only)
+
+**Prerequisites:**
+- [x] Feature extraction working
+- [x] Clinical data loader working
+- [ ] PyTorch Dataset class (blocking for segmentation)
+- [ ] Image preprocessing pipeline
+- [x] Feature + clinical join pipeline (initial)
 
 ### 2026-01-13
 **Status:** Waiting for Data Pipeline completion

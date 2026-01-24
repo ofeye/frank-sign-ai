@@ -33,14 +33,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Dataset/preprocess scaffolds** (`src/franksign/data/dataset.py`, `preprocess.py`) (2026-01-14)
 - **Validation utilities** (`src/franksign/data/validation.py`) incl. Pandera schema and CVAT checks (2026-01-14)
 - **Clinical validation script** (`scripts/validate_data.py`) using Pandera (2026-01-14)
+- **Feature join script** (`scripts/feature_join.py`) for annotations→features→clinical (2026-01-14)
+- **Tabular training script** (`scripts/train_tabular.py`) baseline for syntax_score (2026-01-14)
+- **Synthetic CVAT-aligned clinical demo dataset** (`data/demo/clinical_cvat_demo.csv`) (2026-01-14)
+- **Demo pipeline run**: validation/join/tabular regression on synthetic data (match_rate ~0.73; MAE ~8.33, RMSE ~9.70) (2026-01-14)
 - **task.md** tracker (2026-01-14)
 
 ### Changed
 - ROADMAP.md Phase 3: Added MAEF-Net and Mamba-UNet to model experimental design (2026-01-13)
 - README quick start now points to package entrypoints and validation script (2026-01-14)
-- Data pipeline process log updated with dataset/validation scaffolds (2026-01-14)
-- pyproject.toml dependencies include Pandera for schema validation (2026-01-14)
+- README now documents feature join + tabular training flow and demo data (2026-01-14)
+- Data pipeline process log updated with dataset/validation/join scaffolds (2026-01-14)
+- Model development process log updated (tabular baseline started) (2026-01-14)
+- pyproject.toml dependencies include Pandera and scikit-learn (2026-01-14)
 - `validate_data.py` can also check CVAT annotations structurally (2026-01-14)
+- `train_tabular.py` RMSE computation adjusted for sklearn 1.8 (2026-01-14)
 
 ### Fixed
 - CVAT parser: _parse_point now handles semicolon-separated multi-point coordinates

@@ -25,9 +25,26 @@ franksign-parse --input data/annotations/annotations.xml
 python scripts/validate_data.py --clinical "FS - AI - Sayfa1.csv"
 # Optional: include CVAT structural checks
 python scripts/validate_data.py --clinical "FS - AI - Sayfa1.csv" \
-  --annotations data/annotations/annotations.xml
+  --annotations data/annotations/annotations.xml --report reports/validation.parquet
+# Demo: use CVAT-aligned synthetic clinical data
+python scripts/validate_data.py --clinical data/demo/clinical_cvat_demo.csv \
+  --annotations data/annotations/annotations.xml --report reports/validation_demo.parquet
 
-# Train/Evaluate (placeholders for now)
+# Extract features and join with clinical data
+python scripts/feature_join.py --annotations data/annotations/annotations.xml \
+  --clinical "FS - AI - Sayfa1.csv" --output-dir data/processed
+# Demo: CVAT-aligned join
+python scripts/feature_join.py --annotations data/annotations/annotations.xml \
+  --clinical data/demo/clinical_cvat_demo.csv --output-dir data/processed/demo
+
+# Train tabular model on master features (syntax_score regression by default)
+python scripts/train_tabular.py --features data/processed/master_features.parquet \
+  --target syntax_score --mode regression
+# Demo tabular training
+python scripts/train_tabular.py --features data/processed/demo/master_features.parquet \
+  --target syntax_score --mode regression --output-dir experiments/tabular_demo
+
+# Train/Evaluate (segmentation placeholders for now)
 franksign-train --config configs/default.yaml
 franksign-eval --config configs/default.yaml
 ```
